@@ -64,3 +64,22 @@ ORDER BY o.TotalCost ASC;
 
 ### Task 3
 
+SELECT m.Name AS MenuName
+FROM littlelemondb.menus as m
+WHERE m.MenuItemsID = ANY (
+    SELECT o.MenuItemID
+    FROM littlelemondb.orders as o
+    GROUP BY o.MenuItemID
+    HAVING SUM(o.Quantity) > 2
+);
+
+USE `littlelemondb`;
+CREATE  OR REPLACE VIEW `ordersview3` AS
+SELECT m.Name AS MenuName
+FROM littlelemondb.menus as m
+WHERE m.MenuItemsID = ANY (
+    SELECT o.MenuItemID
+    FROM littlelemondb.orders as o
+    GROUP BY o.MenuItemID
+    HAVING SUM(o.Quantity) > 2
+);;
