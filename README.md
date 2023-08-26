@@ -10,8 +10,8 @@
     - [UpdateBooking()](#updatebooking)
     - [AddBooking()](#addbooking)
     - [CancelBooking()](#cancelbooking)
-    - [AddValidBooking](#addvalidbooking)
-    - [CancelOrder](#cancelorder)
+    - [AddValidBooking()](#addvalidbooking)
+    - [CancelOrder()](#cancelorder)
   - [Data Analysis with Tableau](#data-analysis-with-tableau)
     - [Customers sales](#customers-sales)
     - [Profit chart](#profit-chart)
@@ -156,7 +156,7 @@ END;
 ```sql
 CALL `LittleLemonDB`.`CancelBooking`(9);
 ```
-### AddValidBooking
+### AddValidBooking()
 The AddValidBooking stored procedure aims to securely add a new table booking record. It starts a transaction and attempts to insert a new booking record, checking the table's availability.
 
 ```sql
@@ -186,7 +186,7 @@ CALL AddValidBooking('2022-10-10', 5, 1, 1);
 ```
 
 
-### CancelOrder
+### CancelOrder()
 The CancelOrder stored procedure cancels or removes a specific order by its Order ID. It executes a DELETE statement to remove the order record from the Orders table.
 
 ```sql
