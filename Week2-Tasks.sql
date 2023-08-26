@@ -266,3 +266,39 @@ DELIMITER ;
 
 
 CALL `LittleLemonDB`.`AddBooking`(17, 1, '2022-10-10', 5, 2);
+
+-- Task 2
+
+DELIMITER //
+CREATE PROCEDURE `LittleLemonDB`.`UpdateBooking`(
+    IN booking_id_to_update INT, 
+    IN new_booking_date DATE)
+BEGIN
+    -- Update the booking record
+    UPDATE `LittleLemonDB`.`Bookings`
+    SET `Date` = new_booking_date
+    WHERE `BookingID` = booking_id_to_update;
+
+    SELECT CONCAT('Booking ', booking_id_to_update, ' updated') AS 'Confirmation';
+END;
+//
+DELIMITER ;
+
+CALL `LittleLemonDB`.`UpdateBooking`(9, '2022-11-15');
+
+-- Task 3
+
+DELIMITER //
+CREATE PROCEDURE `LittleLemonDB`.`CancelBooking`(IN booking_id_to_cancel INT)
+BEGIN
+    -- Delete the booking record
+    DELETE FROM `LittleLemonDB`.`Bookings`
+    WHERE `BookingID` = booking_id_to_cancel;
+
+    SELECT CONCAT('Booking ', booking_id_to_cancel, ' cancelled') AS 'Confirmation';
+END;
+//
+DELIMITER ;
+
+CALL `LittleLemonDB`.`CancelBooking`(9);
+
