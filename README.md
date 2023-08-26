@@ -13,10 +13,15 @@
     - [AddValidBooking](#addvalidbooking)
     - [CancelOrder](#cancelorder)
   - [Data Analysis with Tableau](#data-analysis-with-tableau)
+    - [Customers sales](#customers-sales)
+    - [Profit chart](#profit-chart)
+    - [Sales Bubble Chart](#sales-bubble-chart)
+    - [Cuisine Sales and Profits](#cuisine-sales-and-profits)
+    - [Dashboard](#dashboard)
 
 ## Project Description
 
-This project aims to manage the operations of Little Lemon, a fast-food restaurant. MySQL is utilized for database modeling, and Tableau is used for data analysis.
+This project is designed to manage the operations of the Little Lemon fast-food restaurant and is a part of the **Meta Database Engineer Certificate** course on Coursera. The project uses MySQL for database modeling and Tableau for data analysis.
 
 ## Entity-Relationship Diagram
 
@@ -207,5 +212,21 @@ CALL CancelOrder(5);
 ```
 
 ## Data Analysis with Tableau
-A Tableau workbook has been created, containing various charts and dashboards to facilitate data analysis. Download the workbook here.
+A Tableau workbook has been created, containing various charts and dashboards to facilitate data analysis. Download the workbook [here](./tableau.twb)
+
+### Customers sales
+![Customers sales](./Images/tableau-task1.png)
+
+### Profit chart
+![Profit chart](./Images/tableau-task2.png)
+
+### Sales Bubble Chart
+![Sales Bubble Chart](./Images/tableau-task3.png)
+
+###  Cuisine Sales and Profits
+![ Cuisine Sales and Profits](./Images/tableau-task4.png)
+
+### Dashboard
+![dashboard](./Images/tableau-task5.png)
+
 
