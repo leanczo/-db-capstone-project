@@ -13,7 +13,7 @@ CREATE TABLE `littlelemondb`.`menuitems` (
   `DesertName` VARCHAR(45) NULL,
   PRIMARY KEY (`MenuItemsID`));
 
--- Insertar datos más realistas en la tabla menuitems
+-- Insert data
 INSERT INTO `littlelemondb`.`menuitems` (`CourseName`, `StarterName`, `DesertName`)
 VALUES
 ('Grilled Chicken', 'Caesar Salad', 'Cheesecake'),
@@ -145,3 +145,124 @@ SET @id = 1;
 EXECUTE GetOrderDetail USING @id;
 DEALLOCATE PREPARE GetOrderDetail;
 
+-- Task 3
+
+DELIMITER //
+CREATE PROCEDURE CancelOrder(IN orderIDToDelete INT)
+BEGIN
+  DECLARE orderExistence INT;
+
+  -- Check if the order exists in the database
+  SELECT COUNT(*) INTO orderExistence FROM `LittleLemonDB`.`Orders` WHERE OrderID = orderIDToDelete;
+
+  -- If the order exists, delete it
+  IF orderExistence > 0 THEN
+    -- First delete related records from OrderDeliveryStatuses table
+    DELETE FROM `LittleLemonDB`.`OrderDeliveryStatuses` WHERE OrderID = orderIDToDelete;
+
+    -- Then delete the order from the Orders table
+    DELETE FROM `LittleLemonDB`.`Orders` WHERE OrderID = orderIDToDelete;
+
+    SELECT CONCAT('Order ', orderIDToDelete, ' is cancelled') AS 'Confirmation';
+  ELSE
+    SELECT CONCAT('Order ', orderIDToDelete, ' does not exist') AS 'Confirmation';
+  END IF;
+END;
+//
+DELIMITER ;
+
+
+CALL CancelOrder(5);
+
+-- Exercise: Create SQL queries to check available bookings based on user input
+-- Task 1
+
+INSERT INTO `LittleLemonDB`.`Bookings` (`BookingID`, `Date`, `TableNumber`, `CustomerID`, `StaffID`) VALUES
+(11, '2022-10-10', 5, 1, 1),
+(12, '2022-11-12', 3, 3, 2),
+(13, '2022-10-11', 2, 2, 3),
+(14, '2022-10-13', 2, 1, 1);
+
+-- Task 2
+DELIMITER //
+CREATE PROCEDURE `LittleLemonDB`.`CheckBooking`(IN booking_date DATE, IN table_number INT)
+BEGIN
+    DECLARE table_status VARCHAR(50);
+
+    SELECT COUNT(*) INTO @table_count
+    FROM `LittleLemonDB`.`Bookings`
+    WHERE `Date` = booking_date AND `TableNumber` = table_number;
+
+    IF (@table_count > 0) THEN
+        SET table_status = 'Table is already booked.';
+    ELSE
+        SET table_status = 'Table is available.';
+    END IF;
+
+    SELECT table_status AS 'Table Status';
+END;
+//
+DELIMITER ;
+CALL `LittleLemonDB`.`CheckBooking`('2022-10-10', 5);
+
+-- Task 3
+
+DELIMITER //
+CREATE PROCEDURE `LittleLemonDB`.`AddValidBooking`(IN new_booking_date DATE, IN new_table_number INT, IN new_customer_id INT, IN new_staff_id INT)
+BEGIN
+    DECLARE table_status INT;
+    START TRANSACTION;
+
+    SELECT COUNT(*) INTO table_status
+    FROM `LittleLemonDB`.`Bookings`
+    WHERE `Date` = new_booking_date AND `TableNumber` = new_table_number;
+
+    IF (table_status > 0) THEN
+        ROLLBACK;
+        SELECT 'Booking could not be completed. Table is already booked on the specified date.' AS 'Status';
+    ELSE
+        INSERT INTO `LittleLemonDB`.`Bookings`(`Date`, `TableNumber`, `CustomerID`, `StaffID`)
+        VALUES(new_booking_date, new_table_number, new_customer_id, new_staff_id);
+
+        COMMIT;
+        SELECT 'Booking completed successfully.' AS 'Status';
+    END IF;
+END;
+//
+DELIMITER ;
+
+CALL `LittleLemonDB`.`AddValidBooking`('2022-10-10', 5, 1, 1);
+
+-- Exercise: Create SQL queries to add and update bookings
+-- Task 1
+
+DELIMITER //
+CREATE PROCEDURE `LittleLemonDB`.`AddBooking`(
+    IN new_booking_id INT, 
+    IN new_customer_id INT, 
+    IN new_booking_date DATE, 
+    IN new_table_number INT, 
+    IN new_staff_id INT)
+BEGIN
+    -- Insert the new booking record
+    INSERT INTO `LittleLemonDB`.`Bookings`(
+        `BookingID`, 
+        `CustomerID`, 
+        `Date`, 
+        `TableNumber`, 
+        `StaffID`)
+    VALUES(
+        new_booking_id, 
+        new_customer_id, 
+        new_booking_date, 
+        new_table_number,
+        new_staff_id
+    );
+
+    SELECT 'New booking added' AS 'Confirmation';
+END;
+//
+DELIMITER ;
+
+
+CALL `LittleLemonDB`.`AddBooking`(17, 1, '2022-10-10', 5, 2);
